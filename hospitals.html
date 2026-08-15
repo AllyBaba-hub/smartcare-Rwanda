@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8" />
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Find Hospitals | SmartCare Rwanda</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: "#0B2545",
+            medical: "#0077B6",
+            surface: "#F8FAFC"
+          }
+        }
+      }
+    };
+  </script>
+
+</head>
+
+
+<body class="bg-surface text-slate-800">
+
+
+  <!-- HEADER -->
+
+  <header class="bg-navy text-white">
+
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="h-20 flex items-center justify-between">
+
+        <a href="index.html" class="flex items-center gap-3">
+
+          <img
+            src="/assets/logo.png"
+            alt="Opkodex LTD"
+            class="h-11"
+          />
+
+          <div>
+            <div class="font-bold">
+              Opkodex LTD
+            </div>
+
+            <div class="text-xs text-blue-200">
+              SmartCare Rwanda
+            </div>
+          </div>
+
+        </a>
+
+        <a
+          href="index.html"
+          class="text-sm text-blue-100 hover:text-white"
+        >
+          ← Back Home
+        </a>
+
+      </div>
+
+    </nav>
+
+  </header>
+
+
+  <main>
+
+    <!-- PAGE HEADER -->
+
+    <section class="bg-navy text-white py-16">
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <span class="text-sky-300 text-sm font-bold uppercase tracking-wider">
+          SmartCare Rwanda
+        </span>
+
+        <h1 class="mt-3 text-4xl sm:text-5xl font-bold">
+          Select a Partner Hospital Near You
+        </h1>
+
+        <p class="mt-5 text-blue-100 max-w-2xl">
+          Choose a participating healthcare facility to begin
+          your patient or dependent registration.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- SEARCH -->
+
+    <section class="py-10">
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+
+          <div class="grid md:grid-cols-3 gap-4">
+
+            <div class="md:col-span-2">
+
+              <label
+                for="hospitalSearch"
+                class="block text-sm font-semibold text-navy mb-2"
+              >
+                Search hospitals
+              </label>
+
+              <input
+                id="hospitalSearch"
+                type="search"
+                placeholder="Search by hospital name or location..."
+                class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500"
+              />
+
+            </div>
+
+
+            <div>
+
+              <label
+                for="districtFilter"
+                class="block text-sm font-semibold text-navy mb-2"
+              >
+                District
+              </label>
+
+              <select
+                id="districtFilter"
+                class="w-full border border-slate-300 rounded-xl px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-sky-500"
+              >
+
+                <option value="all">
+                  All Districts
+                </option>
+
+                <option value="Rubavu">
+                  Rubavu
+                </option>
+
+              </select>
+
+            </div>
+
+          </div>
+
+        </div>
+
+
+        <!-- HOSPITAL GRID -->
+
+        <div
+          id="hospitalGrid"
+          class="grid md:grid-cols-2 lg:grid-cols-3 gap-7 mt-10"
+        >
+
+          <!-- Populated by TypeScript -->
+
+        </div>
+
+
+        <div
+          id="noHospitals"
+          class="hidden text-center py-16"
+        >
+
+          <div class="text-5xl">
+            🏥
+          </div>
+
+          <h3 class="mt-4 text-xl font-bold text-navy">
+            No hospitals found
+          </h3>
+
+          <p class="mt-2 text-slate-500">
+            Try another search or district.
+          </p>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- PROCESS -->
+
+    <section class="py-16 bg-white">
+
+      <div class="max-w-6xl mx-auto px-4">
+
+        <div class="text-center">
+
+          <h2 class="text-3xl font-bold text-navy">
+            What happens next?
+          </h2>
+
+        </div>
+
+        <div class="grid md:grid-cols-4 gap-6 mt-10">
+
+          <div class="text-center">
+            <div class="mx-auto h-12 w-12 rounded-full bg-sky-100 text-medical flex items-center justify-center font-bold">
+              1
+            </div>
+
+            <h3 class="mt-4 font-bold text-navy">
+              Select
+            </h3>
+
+            <p class="text-sm text-slate-500 mt-2">
+              Select your preferred hospital.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="mx-auto h-12 w-12 rounded-full bg-sky-100 text-medical flex items-center justify-center font-bold">
+              2
+            </div>
+
+            <h3 class="mt-4 font-bold text-navy">
+              Register
+            </h3>
+
+            <p class="text-sm text-slate-500 mt-2">
+              Complete your information.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="mx-auto h-12 w-12 rounded-full bg-sky-100 text-medical flex items-center justify-center font-bold">
+              3
+            </div>
+
+            <h3 class="mt-4 font-bold text-navy">
+              Verification
+            </h3>
+
+            <p class="text-sm text-slate-500 mt-2">
+              The facility reviews your request.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="mx-auto h-12 w-12 rounded-full bg-sky-100 text-medical flex items-center justify-center font-bold">
+              4
+            </div>
+
+            <h3 class="mt-4 font-bold text-navy">
+              Visit
+            </h3>
+
+            <p class="text-sm text-slate-500 mt-2">
+              Arrive with your digital booking.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <footer class="bg-navy text-white py-8">
+
+    <div class="max-w-7xl mx-auto px-4 text-sm text-blue-200">
+
+      <p>
+        © 2026 Opkodex LTD
+      </p>
+
+      <p class="mt-1">
+        TIN: 156712643 · Rubavu, Rwanda · +250 788 342 020
+      </p>
+
+    </div>
+
+  </footer>
+
+
+  <script src="/dist/app.js"></script>
+
+</body>
+
+</html>
