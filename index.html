@@ -1,4 +1,778 @@
-<html>
-<head>null</head>
-<body>null</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Opkodex LTD | SmartCare Rwanda</title>
+
+  <meta
+    name="description"
+    content="SmartCare Rwanda connects citizens to healthcare faster, smarter, and seamlessly."
+  />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            navy: "#0B2545",
+            medical: "#0077B6",
+            surface: "#F8FAFC"
+          }
+        }
+      }
+    };
+  </script>
+</head>
+
+<body class="bg-surface text-slate-800">
+
+  <!-- ================= HEADER ================= -->
+
+  <header class="bg-navy text-white sticky top-0 z-50 shadow-lg">
+
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="flex items-center justify-between h-20">
+
+        <a href="index.html" class="flex items-center gap-3">
+          <img
+            src="/assets/logo.png"
+            alt="Opkodex LTD"
+            class="h-11 w-auto"
+          />
+
+          <div>
+            <div class="font-bold text-lg tracking-tight">
+              Opkodex LTD
+            </div>
+
+            <div class="text-xs text-blue-200">
+              SmartCare Rwanda
+            </div>
+          </div>
+        </a>
+
+        <!-- Desktop Navigation -->
+
+        <div class="hidden md:flex items-center gap-8 text-sm">
+
+          <a
+            href="index.html"
+            class="hover:text-sky-300 transition"
+          >
+            Home
+          </a>
+
+          <a
+            href="#about"
+            class="hover:text-sky-300 transition"
+          >
+            About Us
+          </a>
+
+          <a
+            href="hospitals.html"
+            class="hover:text-sky-300 transition"
+          >
+            Find Hospitals
+          </a>
+
+          <a
+            href="#faq"
+            class="hover:text-sky-300 transition"
+          >
+            FAQ
+          </a>
+
+          <a
+            href="#contact"
+            class="hover:text-sky-300 transition"
+          >
+            Contact
+          </a>
+
+          <a
+            href="hospitals.html"
+            class="bg-medical hover:bg-sky-500 px-5 py-3 rounded-lg font-semibold transition"
+          >
+            Book Appointment
+          </a>
+
+        </div>
+
+        <!-- Mobile Button -->
+
+        <button
+          id="mobileMenuButton"
+          class="md:hidden p-2 rounded-lg hover:bg-white/10"
+          aria-label="Open navigation"
+        >
+          ☰
+        </button>
+
+      </div>
+
+      <!-- Mobile Navigation -->
+
+      <div
+        id="mobileMenu"
+        class="hidden md:hidden pb-5 space-y-3"
+      >
+
+        <a href="index.html" class="block py-2">
+          Home
+        </a>
+
+        <a href="#about" class="block py-2">
+          About Us
+        </a>
+
+        <a href="hospitals.html" class="block py-2">
+          Find Hospitals
+        </a>
+
+        <a href="#faq" class="block py-2">
+          FAQ
+        </a>
+
+        <a href="#contact" class="block py-2">
+          Contact
+        </a>
+
+        <a
+          href="hospitals.html"
+          class="block text-center bg-medical px-5 py-3 rounded-lg font-semibold"
+        >
+          Book Appointment
+        </a>
+
+      </div>
+
+    </nav>
+  </header>
+
+
+  <!-- ================= HERO ================= -->
+
+  <main>
+
+    <section class="bg-navy text-white overflow-hidden">
+
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28"
+      >
+
+        <div class="grid lg:grid-cols-2 gap-14 items-center">
+
+          <div>
+
+            <div
+              class="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm text-blue-100 mb-6"
+            >
+              <span class="h-2 w-2 rounded-full bg-sky-400"></span>
+              SmartCare Rwanda
+            </div>
+
+            <h1
+              class="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight"
+            >
+              Connecting citizens to care—
+              <span class="text-sky-400">
+                faster, smarter, and seamlessly.
+              </span>
+            </h1>
+
+            <p
+              class="mt-6 text-lg text-blue-100 leading-relaxed max-w-2xl"
+            >
+              A smarter hospital self-registration and navigation
+              experience designed to reduce intake bottlenecks,
+              simplify patient onboarding, and help people get to the
+              care they need faster.
+            </p>
+
+            <div class="mt-9 flex flex-col sm:flex-row gap-4">
+
+              <a
+                href="hospitals.html"
+                class="inline-flex justify-center items-center bg-medical hover:bg-sky-500 px-7 py-4 rounded-xl font-bold transition shadow-lg"
+              >
+                Book Appointment
+                <span class="ml-2">→</span>
+              </a>
+
+              <a
+                href="hospitals.html"
+                class="inline-flex justify-center items-center border border-white/30 hover:bg-white/10 px-7 py-4 rounded-xl font-semibold transition"
+              >
+                Find Nearby Hospitals
+              </a>
+
+            </div>
+
+            <div class="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-blue-200">
+
+              <span>✓ Digital pre-registration</span>
+              <span>✓ Insurance information</span>
+              <span>✓ Digital check-in</span>
+              <span>✓ Hospital navigation</span>
+
+            </div>
+
+          </div>
+
+
+          <!-- Hero visual -->
+
+          <div class="relative">
+
+            <div
+              class="bg-white rounded-3xl p-5 shadow-2xl max-w-md mx-auto text-slate-800"
+            >
+
+              <div class="flex items-center justify-between mb-6">
+
+                <div>
+                  <p class="text-xs text-slate-500">
+                    SMARTCARE RWANDA
+                  </p>
+
+                  <h3 class="font-bold text-lg">
+                    Patient Check-In
+                  </h3>
+                </div>
+
+                <div
+                  class="h-11 w-11 bg-sky-100 text-medical rounded-xl flex items-center justify-center text-xl"
+                >
+                  +
+                </div>
+
+              </div>
+
+              <div class="space-y-3">
+
+                <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                  <div class="h-9 w-9 bg-sky-100 text-medical rounded-full flex items-center justify-center font-bold">
+                    1
+                  </div>
+
+                  <div>
+                    <p class="font-semibold">
+                      Pre-register
+                    </p>
+                    <p class="text-xs text-slate-500">
+                      Submit your information
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                  <div class="h-9 w-9 bg-sky-100 text-medical rounded-full flex items-center justify-center font-bold">
+                    2
+                  </div>
+
+                  <div>
+                    <p class="font-semibold">
+                      Verification
+                    </p>
+                    <p class="text-xs text-slate-500">
+                      Hospital reviews your request
+                    </p>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-4 p-4 bg-slate-50 rounded-xl">
+                  <div class="h-9 w-9 bg-sky-100 text-medical rounded-full flex items-center justify-center font-bold">
+                    3
+                  </div>
+
+                  <div>
+                    <p class="font-semibold">
+                      Check in
+                    </p>
+                    <p class="text-xs text-slate-500">
+                      Scan and navigate
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+
+              <a
+                href="hospitals.html"
+                class="block text-center bg-medical text-white rounded-xl py-4 mt-6 font-bold hover:bg-sky-700 transition"
+              >
+                Start Patient Check-In
+              </a>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= PROBLEM ================= -->
+
+    <section class="py-20 bg-white">
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="max-w-3xl">
+
+          <span class="text-medical font-bold text-sm uppercase tracking-wider">
+            The Problem
+          </span>
+
+          <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-navy">
+            Healthcare should not begin with a queue.
+          </h2>
+
+          <p class="mt-5 text-slate-600 leading-relaxed">
+            SmartCare Rwanda is designed around the operational
+            bottlenecks that patients and healthcare workers encounter
+            during registration, identity verification, and hospital
+            navigation.
+          </p>
+
+        </div>
+
+
+        <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+
+          <div class="bg-surface border border-slate-200 rounded-2xl p-6">
+            <div class="text-3xl mb-4">⏱️</div>
+            <h3 class="font-bold text-lg text-navy">
+              Long Waiting Times
+            </h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Reduce unnecessary waiting during the intake process.
+            </p>
+          </div>
+
+          <div class="bg-surface border border-slate-200 rounded-2xl p-6">
+            <div class="text-3xl mb-4">📄</div>
+            <h3 class="font-bold text-lg text-navy">
+              Paper Bottlenecks
+            </h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Move important registration information into a digital workflow.
+            </p>
+          </div>
+
+          <div class="bg-surface border border-slate-200 rounded-2xl p-6">
+            <div class="text-3xl mb-4">🪪</div>
+            <h3 class="font-bold text-lg text-navy">
+              Identity Checks
+            </h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Structure patient identification information before arrival.
+            </p>
+          </div>
+
+          <div class="bg-surface border border-slate-200 rounded-2xl p-6">
+            <div class="text-3xl mb-4">🧭</div>
+            <h3 class="font-bold text-lg text-navy">
+              Hospital Navigation
+            </h3>
+            <p class="mt-2 text-sm text-slate-600">
+              Help patients understand where to go once they arrive.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= ABOUT ================= -->
+
+    <section id="about" class="py-20 bg-surface">
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="grid lg:grid-cols-2 gap-14 items-center">
+
+          <div>
+
+            <span class="text-medical font-bold text-sm uppercase tracking-wider">
+              About Opkodex LTD
+            </span>
+
+            <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-navy">
+              From university innovation to practical digital transformation.
+            </h2>
+
+            <p class="mt-6 text-slate-600 leading-relaxed">
+              Opkode X was established by student innovators at the
+              University of Kigali to bridge the gap between academic
+              software theory and real-world digital transformation
+              across Rwanda and the region.
+            </p>
+
+            <p class="mt-4 text-slate-600 leading-relaxed">
+              The team focuses on practical, scalable technology that
+              tackles everyday operational challenges in essential
+              sectors including healthcare, public administration,
+              and education.
+            </p>
+
+            <a
+              href="#contact"
+              class="inline-flex mt-7 text-medical font-bold hover:underline"
+            >
+              Learn about our work →
+            </a>
+
+          </div>
+
+
+          <div class="bg-navy rounded-3xl p-8 sm:p-10 text-white">
+
+            <h3 class="text-2xl font-bold">
+              Our approach
+            </h3>
+
+            <div class="mt-8 space-y-6">
+
+              <div>
+                <h4 class="font-bold text-sky-300">
+                  Practical Problem Solving
+                </h4>
+                <p class="mt-1 text-blue-100 text-sm">
+                  Building deployable applications around real local
+                  bottlenecks.
+                </p>
+              </div>
+
+              <div>
+                <h4 class="font-bold text-sky-300">
+                  Modern Full-Stack Engineering
+                </h4>
+                <p class="mt-1 text-blue-100 text-sm">
+                  Designing reliable, fast, and scalable digital systems.
+                </p>
+              </div>
+
+              <div>
+                <h4 class="font-bold text-sky-300">
+                  Civic & Sectoral Impact
+                </h4>
+                <p class="mt-1 text-blue-100 text-sm">
+                  Supporting modernization of essential services.
+                </p>
+              </div>
+
+              <div>
+                <h4 class="font-bold text-sky-300">
+                  Peer Collaboration
+                </h4>
+                <p class="mt-1 text-blue-100 text-sm">
+                  Turning university talent into production-ready technology.
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= SMARTCARE ================= -->
+
+    <section class="py-20 bg-white">
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+        <div class="text-center max-w-3xl mx-auto">
+
+          <span class="text-medical font-bold text-sm uppercase tracking-wider">
+            SmartCare Rwanda
+          </span>
+
+          <h2 class="mt-3 text-3xl sm:text-4xl font-bold text-navy">
+            A smarter journey from registration to care.
+          </h2>
+
+          <p class="mt-5 text-slate-600">
+            Complete important information before arriving, coordinate
+            your visit, and receive guidance through the hospital.
+          </p>
+
+        </div>
+
+
+        <div class="grid md:grid-cols-3 gap-8 mt-14">
+
+          <div class="text-center">
+            <div class="mx-auto h-16 w-16 rounded-2xl bg-sky-100 text-medical flex items-center justify-center text-2xl font-bold">
+              01
+            </div>
+
+            <h3 class="mt-5 font-bold text-xl text-navy">
+              Register
+            </h3>
+
+            <p class="mt-2 text-slate-600">
+              Submit patient, dependent, address, and insurance
+              information before your visit.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="mx-auto h-16 w-16 rounded-2xl bg-sky-100 text-medical flex items-center justify-center text-2xl font-bold">
+              02
+            </div>
+
+            <h3 class="mt-5 font-bold text-xl text-navy">
+              Verify
+            </h3>
+
+            <p class="mt-2 text-slate-600">
+              The selected healthcare facility reviews the request
+              and available appointment capacity.
+            </p>
+          </div>
+
+          <div class="text-center">
+            <div class="mx-auto h-16 w-16 rounded-2xl bg-sky-100 text-medical flex items-center justify-center text-2xl font-bold">
+              03
+            </div>
+
+            <h3 class="mt-5 font-bold text-xl text-navy">
+              Arrive & Navigate
+            </h3>
+
+            <p class="mt-2 text-slate-600">
+              Use your digital booking information for check-in and
+              receive directions to the appropriate department.
+            </p>
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= CTA ================= -->
+
+    <section class="bg-medical py-16 text-white">
+
+      <div class="max-w-5xl mx-auto px-4 text-center">
+
+        <h2 class="text-3xl sm:text-4xl font-bold">
+          Ready to make your next hospital visit simpler?
+        </h2>
+
+        <p class="mt-4 text-blue-50 max-w-2xl mx-auto">
+          Select a SmartCare Rwanda partner hospital and begin your
+          digital registration.
+        </p>
+
+        <a
+          href="hospitals.html"
+          class="inline-flex mt-8 bg-white text-navy hover:bg-blue-50 px-8 py-4 rounded-xl font-bold transition"
+        >
+          Find a Hospital
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ================= FAQ ================= -->
+
+    <section id="faq" class="py-20 bg-surface">
+
+      <div class="max-w-4xl mx-auto px-4">
+
+        <div class="text-center mb-12">
+
+          <span class="text-medical font-bold text-sm uppercase tracking-wider">
+            FAQ
+          </span>
+
+          <h2 class="mt-3 text-3xl font-bold text-navy">
+            Frequently Asked Questions
+          </h2>
+
+        </div>
+
+
+        <div class="space-y-4">
+
+          <details class="bg-white rounded-xl border border-slate-200 p-5">
+            <summary class="font-bold text-navy cursor-pointer">
+              What is SmartCare Rwanda?
+            </summary>
+
+            <p class="mt-3 text-slate-600">
+              SmartCare Rwanda is a digital patient self-registration
+              and hospital navigation concept designed to simplify
+              the journey from registration to care.
+            </p>
+          </details>
+
+          <details class="bg-white rounded-xl border border-slate-200 p-5">
+            <summary class="font-bold text-navy cursor-pointer">
+              Do I have to register before visiting a hospital?
+            </summary>
+
+            <p class="mt-3 text-slate-600">
+              Pre-registration is designed to make your visit easier.
+              Availability and final appointment confirmation depend
+              on the participating healthcare facility.
+            </p>
+          </details>
+
+          <details class="bg-white rounded-xl border border-slate-200 p-5">
+            <summary class="font-bold text-navy cursor-pointer">
+              How does the helpdesk confirmation work?
+            </summary>
+
+            <p class="mt-3 text-slate-600">
+              After the request is processed, the prototype workflow
+              provides for an automated email confirmation followed
+              by a support call from the Opkode X Helpdesk.
+            </p>
+          </details>
+
+          <details class="bg-white rounded-xl border border-slate-200 p-5">
+            <summary class="font-bold text-navy cursor-pointer">
+              Can I register a dependent?
+            </summary>
+
+            <p class="mt-3 text-slate-600">
+              Yes. The registration workflow supports dependent
+              information such as children or other eligible family
+              members.
+            </p>
+          </details>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- ================= FOOTER ================= -->
+
+  <footer id="contact" class="bg-navy text-white">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+
+      <div class="grid md:grid-cols-3 gap-10">
+
+        <div>
+
+          <div class="flex items-center gap-3">
+
+            <img
+              src="/assets/logo.png"
+              alt="Opkodex LTD"
+              class="h-10"
+            />
+
+            <span class="font-bold text-lg">
+              Opkodex LTD
+            </span>
+
+          </div>
+
+          <p class="mt-5 text-blue-200 text-sm leading-relaxed">
+            Connecting citizens to care—faster, smarter, and seamlessly.
+          </p>
+
+        </div>
+
+
+        <div>
+
+          <h3 class="font-bold mb-4">
+            Company
+          </h3>
+
+          <div class="space-y-2 text-sm text-blue-200">
+
+            <a href="#about" class="block hover:text-white">
+              About Us
+            </a>
+
+            <a href="hospitals.html" class="block hover:text-white">
+              Find Hospitals
+            </a>
+
+            <a href="#faq" class="block hover:text-white">
+              FAQ
+            </a>
+
+          </div>
+
+        </div>
+
+
+        <div>
+
+          <h3 class="font-bold mb-4">
+            Contact
+          </h3>
+
+          <div class="space-y-2 text-sm text-blue-200">
+
+            <p>
+              Rubavu / Gisenyi, Western Province, Rwanda
+            </p>
+
+            <p>
+              +250 788 342 020
+            </p>
+
+            <p>
+              TIN: 156712643
+            </p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <div class="border-t border-white/10 mt-10 pt-6 text-xs text-blue-300">
+        © 2026 Opkodex LTD. All rights reserved.
+      </div>
+
+    </div>
+
+  </footer>
+
+
+  <script src="/dist/app.js"></script>
+
+</body>
 </html>
