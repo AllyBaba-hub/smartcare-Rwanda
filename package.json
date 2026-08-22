@@ -4,11 +4,11 @@
   "private": true,
   "description": "SmartCare Rwanda - Digital patient registration and hospital queue management prototype",
   "scripts": {
-    "build": "tsc",
-    "start": "python -m http.server 8000",
-    "serve": "python -m http.server 8000"
+   "build": "tsc && node scripts/build.mjs",
+    "start": "python -m http.server 8000 --directory dist",
+    "serve": "python -m http.server 8000 --directory dist" 
   },
   "devDependencies": {
-    "typescript": "6.0.1"
+     "typescript": "5.9.3"
   }
 }
