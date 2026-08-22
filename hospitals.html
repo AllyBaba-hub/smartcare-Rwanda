@@ -1,303 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>Find Hospitals | SmartCare Rwanda</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Find a SmartCare Rwanda hospital." />
+  <title>Find a Hospital | SmartCare Rwanda</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230f4c81'/%3E%3Cpath d='M32 49S12 38 12 24c0-8 6-13 13-13 4 0 7 2 7 6 0-4 3-6 7-6 7 0 13 5 13 13 0 14-20 25-20 25Z' fill='white'/%3E%3Cpath d='M29 20h6v8h8v6h-8v8h-6v-8h-8v-6h8z' fill='%2322c55e'/%3E%3C/svg%3E" />
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            navy: "#0B2545",
-            medical: "#0077B6",
-            surface: "#F8FAFC"
-          }
-        }
-      }
-    };
-  </script>
-
 </head>
-
-
-<body class="bg-surface text-slate-800">
-
-
-  <!-- HEADER -->
-
-  <header class="bg-navy text-white">
-
-    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="h-20 flex items-center justify-between">
-
-        <a href="index.html" class="flex items-center gap-3">
-
-          <img
-            src="/assets/logo.jpg"
-            alt="Opkodex LTD"
-            class="h-11"
-          />
-
-          <div>
-            <div class="font-bold">
-              Opkodex LTD
-            </div>
-
-            <div class="text-xs text-blue-200">
-              SmartCare Rwanda
-            </div>
-          </div>
-
-        </a>
-
-        <a
-          href="index.html"
-          class="text-sm text-blue-100 hover:text-white"
-        >
-          ← Back Home
-        </a>
-
-      </div>
-
-    </nav>
-
+<body data-page="hospitals" class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+  <header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 lg:px-8">
+      <a href="index.html" class="flex items-center gap-3">
+        <span class="grid h-10 w-10 place-items-center rounded-2xl bg-sky-700 text-white">
+          <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 8.6c0 5-8.8 10-8.8 10S3.2 13.6 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z"/><path d="M12 8v6M9 11h6"/></svg>
+        </span>
+        <div><div class="text-sm font-black">SmartCare Rwanda</div><div class="text-xs text-slate-500">Find care faster</div></div>
+      </a>
+      <a href="index.html" class="text-sm font-bold text-slate-500 hover:text-sky-700">← Back home</a>
+    </div>
   </header>
 
-
-  <main>
-
-    <!-- PAGE HEADER -->
-
-    <section class="bg-navy text-white py-16">
-
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <span class="text-sky-300 text-sm font-bold uppercase tracking-wider">
-          SmartCare Rwanda
-        </span>
-
-        <h1 class="mt-3 text-4xl sm:text-5xl font-bold">
-          Select a Partner Hospital Near You
-        </h1>
-
-        <p class="mt-5 text-blue-100 max-w-2xl">
-          Choose a participating healthcare facility to begin
-          your patient or dependent registration.
-        </p>
-
-      </div>
-
-    </section>
-
-
-    <!-- SEARCH -->
-
-    <section class="py-10">
-
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <div class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
-
-          <div class="grid md:grid-cols-3 gap-4">
-
-            <div class="md:col-span-2">
-
-              <label
-                for="hospitalSearch"
-                class="block text-sm font-semibold text-navy mb-2"
-              >
-                Search hospitals
-              </label>
-
-              <input
-                id="hospitalSearch"
-                type="search"
-                placeholder="Search by hospital name or location..."
-                class="w-full border border-slate-300 rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-sky-500"
-              />
-
-            </div>
-
-
-            <div>
-
-              <label
-                for="districtFilter"
-                class="block text-sm font-semibold text-navy mb-2"
-              >
-                District
-              </label>
-
-              <select
-                id="districtFilter"
-                class="w-full border border-slate-300 rounded-xl px-4 py-3 bg-white outline-none focus:ring-2 focus:ring-sky-500"
-              >
-
-                <option value="all">
-                  All Districts
-                </option>
-
-                <option value="Rubavu">
-                  Rubavu
-                </option>
-
-              </select>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- HOSPITAL GRID -->
-
-        <div
-          id="hospitalGrid"
-          class="grid md:grid-cols-2 lg:grid-cols-3 gap-7 mt-10"
-        >
-
-          <!-- Populated by TypeScript -->
-
-        </div>
-
-
-        <div
-          id="noHospitals"
-          class="hidden text-center py-16"
-        >
-
-          <div class="text-5xl">
-            🏥
-          </div>
-
-          <h3 class="mt-4 text-xl font-bold text-navy">
-            No hospitals found
-          </h3>
-
-          <p class="mt-2 text-slate-500">
-            Try another search or district.
-          </p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- PROCESS -->
-
-    <section class="py-16 bg-white">
-
-      <div class="max-w-6xl mx-auto px-4">
-
-        <div class="text-center">
-
-          <h2 class="text-3xl font-bold text-navy">
-            What happens next?
-          </h2>
-
-        </div>
-
-        <div class="grid md:grid-cols-4 gap-6 mt-10">
-
-          <div class="text-center">
-            <div class="mx-auto h-12 w-12 rounded-full bg-sky-100 text-medical flex items-center justify-center font-bold">
-              1
-            </div>
-
-            <h3 class="mt-4 font-bold text-navy">
-              Select
-            </h3>
-
-            <p class="text-sm text-slate-500 mt-2">
-              Select your preferred hospital.
-            </p>
-          </div>
-
-          <div class="text-center">
-            <div class="mx-auto h-12 w-12 rounded-full bg-sky-100 text-medical flex items-center justify-center font-bold">
-              2
-            </div>
-
-            <h3 class="mt-4 font-bold text-navy">
-              Register
-            </h3>
-
-            <p class="text-sm text-slate-500 mt-2">
-              Complete your information.
-            </p>
-          </div>
-
-          <div class="text-center">
-            <div class="mx-auto h-12 w-12 rounded-full bg-sky-100 text-medical flex items-center justify-center font-bold">
-              3
-            </div>
-
-            <h3 class="mt-4 font-bold text-navy">
-              Verification
-            </h3>
-
-            <p class="text-sm text-slate-500 mt-2">
-              The facility reviews your request.
-            </p>
-          </div>
-
-          <div class="text-center">
-            <div class="mx-auto h-12 w-12 rounded-full bg-sky-100 text-medical flex items-center justify-center font-bold">
-              4
-            </div>
-
-            <h3 class="mt-4 font-bold text-navy">
-              Visit
-            </h3>
-
-            <p class="text-sm text-slate-500 mt-2">
-              Arrive with your digital booking.
-            </p>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <footer class="bg-navy text-white py-8">
-
-    <div class="max-w-7xl mx-auto px-4 text-sm text-blue-200">
-
-      <p>
-        © 2026 Opkodex LTD
-      </p>
-
-      <p class="mt-1">
-        TIN: 156712643 · Rubavu, Rwanda · +250 788 342 020
-      </p>
-
+  <main class="mx-auto max-w-6xl px-5 py-12 lg:px-8 lg:py-16">
+    <div class="max-w-2xl">
+      <div class="text-xs font-black uppercase tracking-[0.16em] text-sky-700">Hospital discovery</div>
+      <h1 class="mt-3 text-4xl font-black tracking-tight sm:text-5xl">Choose where you want to receive care.</h1>
+      <p class="mt-4 text-base leading-7 text-slate-600">Select a participating facility to start a digital registration and receive your place in the queue.</p>
     </div>
 
-  </footer>
+    <section class="mt-10 rounded-[2rem] border border-slate-200 bg-white p-5 shadow-xl shadow-slate-900/5 sm:p-7">
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-black text-emerald-700">● Available for demo</span>
+            <span class="rounded-full bg-sky-50 px-3 py-1 text-xs font-black text-sky-700">Rubavu</span>
+          </div>
+          <h2 class="mt-4 text-2xl font-black tracking-tight sm:text-3xl">Polyclinique La Charité</h2>
+          <p class="mt-2 text-sm font-semibold text-slate-500">Rubavu, Rwanda</p>
+          <p class="mt-5 max-w-2xl text-sm leading-7 text-slate-600">A connected-care demo facility where patients can register ahead of arrival and hospital staff can monitor incoming queue activity in real time.</p>
+        </div>
+        <div class="shrink-0 rounded-2xl bg-slate-50 p-4 lg:w-64">
+          <div class="text-xs font-black uppercase tracking-[0.14em] text-slate-400">SmartCare flow</div>
+          <div class="mt-3 space-y-2 text-sm font-bold text-slate-700">
+            <div class="flex items-center justify-between"><span>Remote registration</span><span class="text-emerald-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>Digital ticket</span><span class="text-emerald-600">✓</span></div>
+            <div class="flex items-center justify-between"><span>Live queue</span><span class="text-emerald-600">✓</span></div>
+          </div>
+        </div>
+      </div>
 
+      <div class="mt-7 flex flex-wrap gap-2">
+        <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">General Medicine</span>
+        <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">Emergency Care</span>
+        <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">Outpatient Care</span>
+        <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">Laboratory</span>
+        <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">Maternal Care</span>
+        <span class="rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5 text-xs font-bold text-slate-600">Pharmacy</span>
+      </div>
 
-  <script src="/dist/app.js"></script>
+      <div class="mt-8 flex flex-col gap-3 border-t border-slate-100 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div class="text-sm text-slate-500"><strong class="text-slate-800">Ready to register?</strong> Your ticket will be sent to the hospital queue.</div>
+        <a href="register.html?hospital=la-charite" class="inline-flex items-center justify-center gap-2 rounded-2xl bg-sky-700 px-6 py-3.5 text-sm font-black text-white transition hover:bg-sky-800">Register at this Hospital <span aria-hidden="true">→</span></a>
+      </div>
+    </section>
+  </main>
 
+  <script defer src="./dist/app.js"></script>
 </body>
-
 </html>
