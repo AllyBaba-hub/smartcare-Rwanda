@@ -1,13 +1,14 @@
 {
-  "name": "smartcare-rwanda-demo",
+  "name": "smartcare-rwanda",
   "version": "1.0.0",
   "private": true,
-  "description": "SmartCare Rwanda static browser demo",
+  "description": "SmartCare Rwanda - Digital patient registration and hospital queue management prototype",
   "scripts": {
     "build": "tsc",
-    "serve": "npx serve ."
+    "start": "python -m http.server 8000",
+    "serve": "python -m http.server 8000"
   },
   "devDependencies": {
-    "typescript": "latest"
+    "typescript": "6.0.1"
   }
 }
