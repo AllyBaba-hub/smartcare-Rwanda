@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "None",
-    "lib": ["ES2020", "DOM"],
+    "target": "es2020",
+    "module": "es2020",
+    "moduleResolution": "node",
+    "rootDir": "src",
+    "outDir": "dist",
     "strict": true,
-    "noEmitOnError": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "removeComments": false,
-    "skipLibCheck": true
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2020", "dom"],
+    "noEmitOnError": true
   },
-  "include": ["src/app.ts"]
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", "dist"]
 }
