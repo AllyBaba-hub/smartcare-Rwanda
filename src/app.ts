@@ -50,12 +50,12 @@ interface SupabaseClientLike {
   channel: (name: string) => SupabaseChannel;
 }
 
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY';
+const SUPABASE_URL = 'https://gkjfmrblrvgadorkywpo.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdramZtcmJscnZnYWRvcmt5d3BvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODczNzk3NTUsImV4cCI6MjEwMjk1NTc1NX0.6fk6yZPQDqfrJc7VxVT8Iysx5ewslOeorKFp7VebPwU';
 
-const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY';
-const EMAILJS_SERVICE_ID = 'YOUR_EMAILJS_SERVICE_ID';
-const EMAILJS_TEMPLATE_ID = 'YOUR_EMAILJS_TEMPLATE_ID';
+const EMAILJS_PUBLIC_KEY = 'EKslC0adVpfx4kIr2Y';
+const EMAILJS_SERVICE_ID = 'service_5uf48h4';
+const EMAILJS_TEMPLATE_ID = 'template_arrc9r8';
 
 const HOSPITALS: Record<string, string> = {
   'la-charite': 'Polyclinique La Charité',
