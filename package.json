@@ -1,0 +1,13 @@
+{
+  "name": "smartcare-rwanda-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SmartCare Rwanda static browser demo",
+  "scripts": {
+    "build": "tsc",
+    "serve": "npx serve ."
+  },
+  "devDependencies": {
+    "typescript": "latest"
+  }
+}
