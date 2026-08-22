@@ -1,828 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
   <meta charset="UTF-8" />
-
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  />
-
-  <title>Patient Registration | SmartCare Rwanda</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Register for the SmartCare Rwanda hospital queue." />
+  <title>Register for Care | SmartCare Rwanda</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230f4c81'/%3E%3Cpath d='M32 49S12 38 12 24c0-8 6-13 13-13 4 0 7 2 7 6 0-4 3-6 7-6 7 0 13 5 13 13 0 14-20 25-20 25Z' fill='white'/%3E%3Cpath d='M29 20h6v8h8v6h-8v8h-6v-8h-8v-6h8z' fill='%2322c55e'/%3E%3C/svg%3E" />
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            navy: "#0B2545",
-            medical: "#0077B6",
-            surface: "#F8FAFC"
-          }
-        }
-      }
-    };
-  </script>
-
 </head>
-
-
-<body class="bg-surface text-slate-800">
-
-
-  <!-- HEADER -->
-
-  <header class="bg-navy text-white">
-
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="h-20 flex items-center justify-between">
-
-        <a href="index.html" class="flex items-center gap-3">
-
-          <img
-            src="/assets/logo.jpg"
-            alt="Opkodex LTD"
-            class="h-10"
-          />
-
-          <div>
-            <div class="font-bold">
-              SmartCare Rwanda
-            </div>
-
-            <div class="text-xs text-blue-200">
-              Patient Registration
-            </div>
-          </div>
-
-        </a>
-
-        <a
-          href="hospitals.html"
-          class="text-sm text-blue-100 hover:text-white"
-        >
-          Change Hospital
-        </a>
-
-      </div>
-
+<body data-page="register" class="min-h-screen bg-slate-50 text-slate-900 antialiased">
+  <header class="border-b border-slate-200 bg-white">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 lg:px-8">
+      <a href="index.html" class="flex items-center gap-3">
+        <span class="grid h-10 w-10 place-items-center rounded-2xl bg-sky-700 text-white"><svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.8 8.6c0 5-8.8 10-8.8 10S3.2 13.6 3.2 8.6A4.6 4.6 0 0 1 12 6.1a4.6 4.6 0 0 1 8.8 2.5Z"/><path d="M12 8v6M9 11h6"/></svg></span>
+        <div><div class="text-sm font-black">SmartCare Rwanda</div><div class="text-xs text-slate-500">Digital patient registration</div></div>
+      </a>
+      <a href="hospitals.html" class="text-sm font-bold text-slate-500 hover:text-sky-700">← Change hospital</a>
     </div>
-
   </header>
 
-
-  <main class="py-10 sm:py-14">
-
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-
-
-      <!-- HOSPITAL BANNER -->
-
-      <div
-        id="selectedHospitalBanner"
-        class="bg-navy text-white rounded-2xl p-6 sm:p-8 mb-8"
-      >
-
-        <p class="text-sm text-blue-200">
-          Registering for Visit at:
-        </p>
-
-        <h1
-          id="selectedHospitalName"
-          class="mt-1 text-2xl sm:text-3xl font-bold"
-        >
-          Loading hospital...
-        </h1>
-
-        <p
-          id="selectedHospitalLocation"
-          class="mt-2 text-blue-200"
-        >
-          Loading location...
-        </p>
-
+  <main class="mx-auto grid max-w-6xl gap-8 px-5 py-10 lg:grid-cols-[0.75fr_1.25fr] lg:px-8 lg:py-16">
+    <aside class="rounded-[2rem] bg-slate-950 p-6 text-white shadow-xl sm:p-8">
+      <div class="text-xs font-black uppercase tracking-[0.16em] text-sky-300">Your destination</div>
+      <h1 id="hospitalNameDisplay" class="mt-4 text-3xl font-black tracking-tight">Polyclinique La Charité</h1>
+      <div class="mt-2 text-sm font-semibold text-slate-300">Rubavu, Rwanda</div>
+      <p class="mt-6 text-sm leading-7 text-slate-300">Complete the form and SmartCare will place your registration into the hospital's waiting queue.</p>
+      <div class="mt-8 space-y-3">
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4"><div class="text-xs font-bold text-slate-400">01</div><div class="mt-1 font-extrabold">Register</div></div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4"><div class="text-xs font-bold text-slate-400">02</div><div class="mt-1 font-extrabold">Receive ticket</div></div>
+        <div class="rounded-2xl border border-white/10 bg-white/5 p-4"><div class="text-xs font-bold text-slate-400">03</div><div class="mt-1 font-extrabold">Hospital sees you live</div></div>
       </div>
+    </aside>
 
+    <section class="rounded-[2rem] border border-slate-200 bg-white p-6 shadow-xl shadow-slate-900/5 sm:p-8">
+      <div id="formView">
+        <div class="max-w-2xl">
+          <div class="text-xs font-black uppercase tracking-[0.16em] text-sky-700">Patient registration</div>
+          <h2 class="mt-3 text-3xl font-black tracking-tight">Join the queue before you arrive.</h2>
+          <p class="mt-3 text-sm leading-7 text-slate-500">Use fictional/demo data for this pitch prototype. Your ticket will be generated after the hospital confirms the registration in SmartCare.</p>
+        </div>
 
-      <!-- PROCESS NOTICE -->
+        <div id="formError" class="mt-6 hidden rounded-2xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700" role="alert"></div>
 
-      <div
-        class="bg-sky-50 border border-sky-200 rounded-2xl p-5 mb-8"
-      >
-
-        <div class="flex gap-4">
-
-          <div
-            class="h-10 w-10 shrink-0 rounded-xl bg-sky-100 text-medical flex items-center justify-center"
-          >
-            ✓
+        <form id="registrationForm" class="mt-7 space-y-5" novalidate>
+          <div>
+            <label for="patientName" class="mb-2 block text-sm font-extrabold text-slate-700">Patient name <span class="text-red-500">*</span></label>
+            <input id="patientName" name="patientName" type="text" autocomplete="name" required maxlength="120" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10" placeholder="e.g. Jean Claude" />
           </div>
 
           <div>
-
-            <h2 class="font-bold text-navy">
-              What happens after you submit?
-            </h2>
-
-            <p class="mt-1 text-sm text-slate-600">
-              Your request enters the SmartCare workflow. An automated
-              email confirmation is queued, followed by a verification
-              call from the Opkode X Helpdesk team.
-            </p>
-
-            <div class="mt-3 flex flex-col sm:flex-row gap-2 text-sm">
-
-              <span class="font-semibold text-medical">
-                1. Email confirmation
-              </span>
-
-              <span class="hidden sm:inline text-slate-400">
-                →
-              </span>
-
-              <span class="font-semibold text-medical">
-                2. Helpdesk verification call
-              </span>
-
-            </div>
-
+            <label for="email" class="mb-2 block text-sm font-extrabold text-slate-700">Email address <span class="text-red-500">*</span></label>
+            <input id="email" name="email" type="email" autocomplete="email" required maxlength="160" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10" placeholder="you@example.com" />
           </div>
 
-        </div>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="phone" class="mb-2 block text-sm font-extrabold text-slate-700">Phone number <span class="font-medium text-slate-400">(optional)</span></label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="30" class="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10" placeholder="+250 ..." />
+            </div>
+            <div>
+              <label for="hospitalName" class="mb-2 block text-sm font-extrabold text-slate-700">Hospital</label>
+              <input id="hospitalName" name="hospitalName" type="text" readonly class="w-full cursor-not-allowed rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-sm font-bold text-slate-700 outline-none" value="Polyclinique La Charité" />
+            </div>
+          </div>
 
+          <div>
+            <label for="reason" class="mb-2 block text-sm font-extrabold text-slate-700">Reason for visit <span class="font-medium text-slate-400">(optional)</span></label>
+            <textarea id="reason" name="reason" rows="4" maxlength="500" class="w-full resize-none rounded-2xl border border-slate-200 bg-white px-4 py-3.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-sky-500 focus:ring-4 focus:ring-sky-500/10" placeholder="General consultation, laboratory, pharmacy, etc."></textarea>
+          </div>
+
+          <button id="submitButton" type="submit" class="inline-flex w-full items-center justify-center gap-3 rounded-2xl bg-sky-700 px-5 py-4 text-sm font-black text-white shadow-lg shadow-sky-700/20 transition hover:bg-sky-800 disabled:cursor-not-allowed disabled:opacity-60">
+            <span id="submitLabel">Get My Queue Ticket</span>
+            <span id="submitSpinner" class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" aria-hidden="true"></span>
+          </button>
+          <p class="text-center text-xs leading-5 text-slate-400">By submitting, you are using the SmartCare demonstration environment. Do not enter sensitive real-world medical information.</p>
+        </form>
       </div>
 
-
-      <!-- FORM -->
-
-      <form
-        id="registrationForm"
-        class="space-y-8"
-        novalidate
-      >
-
-
-        <!-- SECTION A -->
-
-        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-
-          <div class="px-6 sm:px-8 py-5 border-b border-slate-200">
-
-            <span class="text-sm font-bold text-medical">
-              SECTION A
-            </span>
-
-            <h2 class="text-xl font-bold text-navy mt-1">
-              Primary Sponsor / Parent Information
-            </h2>
-
-          </div>
-
-
-          <div class="p-6 sm:p-8 grid sm:grid-cols-2 gap-6">
-
-
-            <div>
-
-              <label class="field-label" for="fullName">
-                Full Legal Name *
-              </label>
-
-              <input
-                id="fullName"
-                name="fullName"
-                type="text"
-                required
-                autocomplete="name"
-                class="field-input"
-                placeholder="Enter full name"
-              />
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="nin">
-                National ID / NIN *
-              </label>
-
-              <input
-                id="nin"
-                name="nin"
-                type="text"
-                inputmode="numeric"
-                maxlength="16"
-                minlength="16"
-                pattern="[0-9]{16}"
-                required
-                class="field-input"
-                placeholder="16-digit NIN"
-              />
-
-              <p class="field-help">
-                Enter exactly 16 digits.
-              </p>
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="dob">
-                Date of Birth *
-              </label>
-
-              <input
-                id="dob"
-                name="dob"
-                type="date"
-                required
-                class="field-input"
-              />
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="occupation">
-                Occupation
-              </label>
-
-              <input
-                id="occupation"
-                name="occupation"
-                type="text"
-                class="field-input"
-                placeholder="e.g. Teacher, Student, Business"
-              />
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="phone">
-                Phone Number *
-              </label>
-
-              <input
-                id="phone"
-                name="phone"
-                type="tel"
-                required
-                autocomplete="tel"
-                class="field-input"
-                placeholder="+250 7XX XXX XXX"
-              />
-
-              <p class="field-help">
-                Used for Opkode X Helpdesk verification.
-              </p>
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="email">
-                Email Address *
-              </label>
-
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                autocomplete="email"
-                class="field-input"
-                placeholder="you@example.com"
-              />
-
-              <p class="field-help">
-                Used for your digital confirmation.
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- SECTION B -->
-
-        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-
-          <div class="px-6 sm:px-8 py-5 border-b border-slate-200">
-
-            <span class="text-sm font-bold text-medical">
-              SECTION B
-            </span>
-
-            <h2 class="text-xl font-bold text-navy mt-1">
-              Residential Address
-            </h2>
-
-          </div>
-
-
-          <div class="p-6 sm:p-8 grid sm:grid-cols-2 gap-6">
-
-
-            <div>
-              <label class="field-label" for="province">
-                Province *
-              </label>
-
-              <select
-                id="province"
-                name="province"
-                required
-                class="field-input"
-              >
-                <option value="">
-                  Select province
-                </option>
-
-                <option>
-                  Western Province
-                </option>
-
-                <option>
-                  Kigali City
-                </option>
-
-                <option>
-                  Northern Province
-                </option>
-
-                <option>
-                  Southern Province
-                </option>
-
-                <option>
-                  Eastern Province
-                </option>
-              </select>
-            </div>
-
-
-            <div>
-              <label class="field-label" for="district">
-                District *
-              </label>
-
-              <input
-                id="district"
-                name="district"
-                required
-                class="field-input"
-                placeholder="District"
-              />
-            </div>
-
-
-            <div>
-              <label class="field-label" for="sector">
-                Sector *
-              </label>
-
-              <input
-                id="sector"
-                name="sector"
-                required
-                class="field-input"
-                placeholder="Sector"
-              />
-            </div>
-
-
-            <div>
-              <label class="field-label" for="cell">
-                Cell *
-              </label>
-
-              <input
-                id="cell"
-                name="cell"
-                required
-                class="field-input"
-                placeholder="Cell"
-              />
-            </div>
-
-
-            <div>
-              <label class="field-label" for="village">
-                Village *
-              </label>
-
-              <input
-                id="village"
-                name="village"
-                required
-                class="field-input"
-                placeholder="Village"
-              />
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- SECTION C -->
-
-        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-
-          <div class="px-6 sm:px-8 py-5 border-b border-slate-200">
-
-            <span class="text-sm font-bold text-medical">
-              SECTION C
-            </span>
-
-            <h2 class="text-xl font-bold text-navy mt-1">
-              Dependent & Insurance Information
-            </h2>
-
-          </div>
-
-
-          <div class="p-6 sm:p-8 grid sm:grid-cols-2 gap-6">
-
-
-            <div>
-
-              <label class="field-label" for="dependentName">
-                Beneficiary / Child Name
-              </label>
-
-              <input
-                id="dependentName"
-                name="dependentName"
-                class="field-input"
-                placeholder="Optional"
-              />
-
-              <p class="field-help">
-                Leave blank if registering only yourself.
-              </p>
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="relationship">
-                Relationship
-              </label>
-
-              <select
-                id="relationship"
-                name="relationship"
-                class="field-input"
-              >
-
-                <option value="">
-                  Select relationship
-                </option>
-
-                <option value="child">
-                  Child
-                </option>
-
-                <option value="spouse">
-                  Spouse
-                </option>
-
-                <option value="dependent">
-                  Other Dependent
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="insuranceProvider">
-                Insurance Provider *
-              </label>
-
-              <select
-                id="insuranceProvider"
-                name="insuranceProvider"
-                required
-                class="field-input"
-              >
-
-                <option value="">
-                  Select provider
-                </option>
-
-                <option value="mutuelle">
-                  Mutuelle de Santé (CBHI)
-                </option>
-
-                <option value="rssb">
-                  RSSB / RAMA
-                </option>
-
-                <option value="eden-care">
-                  Eden Care
-                </option>
-
-                <option value="sanlam">
-                  Sanlam
-                </option>
-
-                <option value="uap">
-                  UAP
-                </option>
-
-                <option value="radiant">
-                  Radiant
-                </option>
-
-                <option value="cash">
-                  Cash / Self-Pay
-                </option>
-
-              </select>
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="policyId">
-                Policy / Card ID *
-              </label>
-
-              <input
-                id="policyId"
-                name="policyId"
-                required
-                class="field-input"
-                placeholder="Insurance policy/card number"
-              />
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- SECTION D -->
-
-        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-
-          <div class="px-6 sm:px-8 py-5 border-b border-slate-200">
-
-            <span class="text-sm font-bold text-medical">
-              SECTION D
-            </span>
-
-            <h2 class="text-xl font-bold text-navy mt-1">
-              Document Uploads
-            </h2>
-
-            <p class="text-sm text-slate-500 mt-2">
-              Upload supporting identification and insurance documents.
-            </p>
-
-          </div>
-
-
-          <div class="p-6 sm:p-8 grid md:grid-cols-2 gap-6">
-
-
-            <div>
-
-              <label class="field-label" for="idDocument">
-                National ID / Identification *
-              </label>
-
-              <input
-                id="idDocument"
-                name="idDocument"
-                type="file"
-                required
-                accept=".jpg,.jpeg,.png,.pdf"
-                class="block w-full text-sm border border-slate-300 rounded-xl p-3"
-              />
-
-              <p class="field-help">
-                JPG, PNG, or PDF.
-              </p>
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="insuranceDocument">
-                Insurance Card / Coverage Proof *
-              </label>
-
-              <input
-                id="insuranceDocument"
-                name="insuranceDocument"
-                type="file"
-                required
-                accept=".jpg,.jpeg,.png,.pdf"
-                class="block w-full text-sm border border-slate-300 rounded-xl p-3"
-              />
-
-              <p class="field-help">
-                JPG, PNG, or PDF.
-              </p>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- SECTION E -->
-
-        <section class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
-
-          <div class="px-6 sm:px-8 py-5 border-b border-slate-200">
-
-            <span class="text-sm font-bold text-medical">
-              SECTION E
-            </span>
-
-            <h2 class="text-xl font-bold text-navy mt-1">
-              Visit Schedule
-            </h2>
-
-          </div>
-
-
-          <div class="p-6 sm:p-8 grid sm:grid-cols-2 gap-6">
-
-
-            <div>
-
-              <label class="field-label" for="visitDate">
-                Preferred Visit Date *
-              </label>
-
-              <input
-                id="visitDate"
-                name="visitDate"
-                type="date"
-                required
-                class="field-input"
-              />
-
-            </div>
-
-
-            <div>
-
-              <label class="field-label" for="department">
-                Department *
-              </label>
-
-              <select
-                id="department"
-                name="department"
-                required
-                class="field-input"
-              >
-
-                <option value="">
-                  Select department
-                </option>
-
-                <option>
-                  General Consultation
-                </option>
-
-                <option>
-                  Pediatrics
-                </option>
-
-                <option>
-                  Maternity
-                </option>
-
-                <option>
-                  Laboratory
-                </option>
-
-                <option>
-                  Emergency Care
-                </option>
-
-              </select>
-
-            </div>
-
-          </div>
-
-        </section>
-
-
-        <!-- SUBMIT -->
-
-        <div
-          id="formMessage"
-          class="hidden rounded-xl p-4 text-sm"
-        ></div>
-
-
-        <div class="flex flex-col sm:flex-row gap-4 sm:justify-end">
-
-          <a
-            href="hospitals.html"
-            class="text-center border border-slate-300 bg-white hover:bg-slate-50 px-7 py-4 rounded-xl font-semibold"
-          >
-            Change Hospital
-          </a>
-
-          <button
-            type="submit"
-            class="bg-medical hover:bg-sky-700 text-white px-8 py-4 rounded-xl font-bold transition"
-          >
-            Submit Registration →
-          </button>
-
+      <div id="successView" class="hidden py-8 text-center">
+        <div class="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-emerald-100 text-emerald-700"><svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m5 12 4 4L19 6"/></svg></div>
+        <div class="mt-6 text-xs font-black uppercase tracking-[0.16em] text-emerald-700">Registration successful</div>
+        <h2 class="mt-3 text-3xl font-black tracking-tight">You have a place in the queue.</h2>
+        <p class="mt-3 text-sm leading-7 text-slate-500">Your SmartCare registration has been added to <span id="successHospital" class="font-bold text-slate-700">Polyclinique La Charité</span>.</p>
+        <div class="mx-auto mt-8 max-w-sm rounded-[2rem] bg-slate-950 px-6 py-7 text-white shadow-xl">
+          <div class="text-xs font-black uppercase tracking-[0.18em] text-slate-400">Your queue ticket</div>
+          <div id="ticketNumber" class="mt-2 text-6xl font-black tracking-tight">A-412</div>
+          <div class="mt-3 text-sm font-semibold text-emerald-300">Status: Waiting</div>
         </div>
-
-
-      </form>
-
-    </div>
-
+        <div id="emailStatus" class="mx-auto mt-5 max-w-sm rounded-2xl bg-sky-50 p-4 text-left text-xs font-semibold leading-5 text-sky-800">A confirmation email is being prepared.</div>
+        <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <button id="newRegistrationButton" type="button" class="rounded-2xl border border-slate-200 bg-white px-5 py-3 text-sm font-black text-slate-800 hover:border-sky-200 hover:text-sky-700">Register another patient</button>
+          <a href="index.html" class="rounded-2xl bg-sky-700 px-5 py-3 text-sm font-black text-white hover:bg-sky-800">Back to SmartCare</a>
+        </div>
+      </div>
+    </section>
   </main>
 
-
-  <footer class="bg-navy text-white py-8">
-
-    <div class="max-w-5xl mx-auto px-4 text-sm text-blue-200">
-
-      <p>
-        © 2026 Opkodex LTD
-      </p>
-
-      <p class="mt-1">
-        TIN: 156712643 · Rubavu, Rwanda · +250 788 342 020
-      </p>
-
-    </div>
-
-  </footer>
-
-
-  <style>
-
-    .field-label {
-      display: block;
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #0B2545;
-      margin-bottom: 0.5rem;
-    }
-
-    .field-input {
-      width: 100%;
-      border: 1px solid #cbd5e1;
-      border-radius: 0.75rem;
-      padding: 0.75rem 1rem;
-      background: white;
-      outline: none;
-    }
-
-    .field-input:focus {
-      border-color: #0077B6;
-      box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.12);
-    }
-
-    .field-help {
-      margin-top: 0.35rem;
-      font-size: 0.75rem;
-      color: #64748b;
-    }
-
-  </style>
-
-
-  <script src="/dist/app.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script defer src="./dist/app.js"></script>
 </body>
-
 </html>
