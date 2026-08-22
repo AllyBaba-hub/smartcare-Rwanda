@@ -18,6 +18,14 @@
       <div class="flex flex-wrap items-center gap-3">
         <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-2.5"><div class="text-[10px] font-black uppercase tracking-[0.15em] text-slate-400">Facility</div><div class="text-sm font-extrabold">Polyclinique La Charité · Rubavu</div></div>
         <div id="connectionBadge" class="rounded-2xl bg-amber-50 px-4 py-2.5 text-xs font-black text-amber-700">● Connecting…</div>
+           <form id="adminLoginForm" class="flex flex-wrap items-center gap-2" novalidate>
+          <label class="sr-only" for="adminEmail">Administrator email</label>
+          <input id="adminEmail" type="email" autocomplete="username" required placeholder="Admin email" class="w-36 rounded-xl border border-slate-200 px-3 py-2 text-xs outline-none focus:border-sky-500 sm:w-44" />
+          <label class="sr-only" for="adminPassword">Password</label>
+          <input id="adminPassword" type="password" autocomplete="current-password" required placeholder="Password" class="w-28 rounded-xl border border-slate-200 px-3 py-2 text-xs outline-none focus:border-sky-500 sm:w-32" />
+          <button id="adminLoginButton" type="submit" class="rounded-xl bg-sky-700 px-3 py-2 text-xs font-black text-white hover:bg-sky-800">Sign in</button>
+        </form>
+        <button id="adminLogoutButton" type="button" class="hidden rounded-xl border border-slate-200 bg-white px-3 py-2 text-xs font-black text-slate-700 hover:text-sky-700">Sign out</button>
         <a href="index.html" class="rounded-2xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-black text-slate-700 hover:text-sky-700">Home</a>
       </div>
     </div>
@@ -66,6 +74,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="./dist/app.js"></script>
+ <script defer src="./app.js"></script>
 </body>
 </html>
