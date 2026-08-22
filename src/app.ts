@@ -1,938 +1,455 @@
-// ============================================================
-// SMARTCARE RWANDA - OPCODEX LTD
-// Main TypeScript Application
-// ============================================================
+/* SmartCare Rwanda browser-only TypeScript application. */
 
+declare const supabase: {
+  createClient: (url: string, key: string) => SupabaseClientLike;
+};
 
-// ============================================================
-// TYPES
-// ============================================================
+declare const emailjs: {
+  init: (options: { publicKey: string }) => void;
+  send: (serviceId: string, templateId: string, templateParams: Record<string, string>) => Promise<{ status: number; text: string }>;
+};
 
-interface Address {
-  province: string;
-  district: string;
-  sector: string;
-  cell: string;
-  village: string;
+interface QueuePatient {
+  id?: string;
+  patient_name: string;
+  email: string;
+  hospital_name: string;
+  ticket_number: string;
+  status: 'waiting' | 'serving' | 'completed';
+  created_at: string;
 }
 
-
-interface FileMetadata {
-  name: string;
-  size: number;
-  type: string;
-  lastModified: number;
+interface SupabaseResult<T> {
+  data: T | null;
+  error: { message: string } | null;
 }
 
-
-interface FileUploads {
-  identificationDocument: FileMetadata | null;
-  insuranceDocument: FileMetadata | null;
+interface SupabaseQuery<T> {
+  select: (columns?: string) => SupabaseQuery<T>;
+  order: (column: string, options?: { ascending?: boolean }) => SupabaseQuery<T>;
+  insert: (values: Partial<T> | Partial<T>[]) => Promise<SupabaseResult<T[]>>;
+  update: (values: Partial<T>) => SupabaseQuery<T>;
+  eq: (column: string, value: string) => Promise<SupabaseResult<T[]>>;
+  then: <TResult1 = SupabaseResult<T[]>, TResult2 = never>(
+    onfulfilled?: ((value: SupabaseResult<T[]>) => TResult1 | PromiseLike<TResult1>) | null,
+    onrejected?: ((reason: unknown) => TResult2 | PromiseLike<TResult2>) | null
+  ) => PromiseLike<TResult1 | TResult2>;
 }
 
-
-interface Dependent {
-  fullName: string;
-  relationship: string;
+interface SupabaseChannel {
+  on: (
+    event: 'postgres_changes',
+    config: { event: 'INSERT' | 'UPDATE'; schema: string; table: string },
+    callback: (payload: { new: QueuePatient }) => void
+  ) => SupabaseChannel;
+  subscribe: (callback?: (status: string) => void) => SupabaseChannel;
 }
 
-
-interface PatientRegistration {
-  hospitalId: string;
-
-  primarySponsor: {
-    fullName: string;
-    nin: string;
-    dateOfBirth: string;
-    occupation: string;
-    phone: string;
-    email: string;
-  };
-
-  address: Address;
-
-  dependent: Dependent | null;
-
-  insurance: {
-    provider: string;
-    policyId: string;
-  };
-
-  documents: FileUploads;
-
-  visit: {
-    date: string;
-    department: string;
-  };
-
-  submittedAt: string;
+interface SupabaseClientLike {
+  from: <T>(table: string) => SupabaseQuery<T>;
+  channel: (name: string) => SupabaseChannel;
 }
 
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_OR_PUBLISHABLE_KEY';
 
-interface Hospital {
-  id: string;
-  name: string;
-  location: string;
-  district: string;
-  province: string;
-  specialties: string[];
-  insurance: string[];
-  description: string;
-  registrationUrl: string;
-}
+const EMAILJS_PUBLIC_KEY = 'YOUR_EMAILJS_PUBLIC_KEY';
+const EMAILJS_SERVICE_ID = 'YOUR_EMAILJS_SERVICE_ID';
+const EMAILJS_TEMPLATE_ID = 'YOUR_EMAILJS_TEMPLATE_ID';
 
+const HOSPITALS: Record<string, string> = {
+  'la-charite': 'Polyclinique La Charité',
+};
 
-// ============================================================
-// HOSPITAL DATA
-// ============================================================
+const isPlaceholder = (value: string): boolean =>
+  !value || value.startsWith('YOUR_') || value.includes('REPLACE_ME');
 
-const hospitals: Hospital[] = [
+const hasSupabaseConfig = (): boolean =>
+  !isPlaceholder(SUPABASE_URL) && !isPlaceholder(SUPABASE_KEY);
 
-  {
-    id: "la-charite",
+const hasEmailJsConfig = (): boolean =>
+  !isPlaceholder(EMAILJS_PUBLIC_KEY) &&
+  !isPlaceholder(EMAILJS_SERVICE_ID) &&
+  !isPlaceholder(EMAILJS_TEMPLATE_ID);
 
-    name: "Polyclinique La Charité",
+const getSupabaseClient = (): SupabaseClientLike | null => {
+  if (!hasSupabaseConfig()) return null;
+  return supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+};
 
-    location: "Rubavu / Gisenyi, Western Province",
+const escapeHtml = (value: string): string =>
+  value.replace(/[&<>'"]/g, (char) => {
+    const map: Record<string, string> = {
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      "'": '&#39;',
+      '"': '&quot;',
+    };
+    return map[char];
+  });
 
-    district: "Rubavu",
+const formatDateTime = (value: string): string => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return '—';
+  return new Intl.DateTimeFormat(undefined, {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(date);
+};
 
-    province: "Western Province",
+const setText = (id: string, text: string): void => {
+  const element = document.getElementById(id);
+  if (element) element.textContent = text;
+};
 
-    specialties: [
-      "General Consultation",
-      "Pediatrics",
-      "Maternity",
-      "Laboratory",
-      "Emergency Care"
-    ],
+const showElement = (id: string, show: boolean): void => {
+  const element = document.getElementById(id);
+  if (element) element.classList.toggle('hidden', !show);
+};
 
-    insurance: [
-      "Mutuelle de Santé (CBHI)",
-      "RSSB / RAMA",
-      "Eden Care",
-      "Sanlam",
-      "UAP",
-      "Radiant",
-      "Cash / Self-Pay"
-    ],
+const setAlert = (id: string, message: string, visible = true): void => {
+  const element = document.getElementById(id);
+  if (!element) return;
+  element.textContent = message;
+  element.classList.toggle('hidden', !visible);
+};
 
-    description:
-      "A SmartCare Rwanda partner facility where patients can begin the digital registration workflow.",
+const resolveHospitalFromUrl = (): string => {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('hospital') ?? 'la-charite';
+  return HOSPITALS[code] ?? HOSPITALS['la-charite'];
+};
 
-    registrationUrl:
-      "register.html?hospital=la-charite"
+const getSessionTicketStore = (): string[] => {
+  try {
+    const parsed = JSON.parse(sessionStorage.getItem('smartcare_used_tickets') ?? '[]');
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === 'string') : [];
+  } catch {
+    return [];
   }
+};
 
-];
-
-
-// ============================================================
-// UTILITY FUNCTIONS
-// ============================================================
-
-function getElement<T extends HTMLElement>(
-  selector: string
-): T | null {
-
-  return document.querySelector<T>(selector);
-}
-
-
-function escapeHtml(value: string): string {
-
-  const div = document.createElement("div");
-
-  div.textContent = value;
-
-  return div.innerHTML;
-}
-
-
-function formatFileSize(bytes: number): string {
-
-  if (bytes === 0) {
-    return "0 Bytes";
+const saveSessionTicket = (ticket: string): void => {
+  try {
+    const tickets = getSessionTicketStore();
+    tickets.push(ticket);
+    sessionStorage.setItem('smartcare_used_tickets', JSON.stringify(tickets.slice(-200)));
+  } catch {
+    // Ignore storage failures; ticket uniqueness is best-effort for this demo.
   }
+};
 
-  const units = [
-    "Bytes",
-    "KB",
-    "MB",
-    "GB"
-  ];
+const generateTicket = (): string => {
+  const used = new Set(getSessionTicketStore());
+  let ticket = '';
+  let attempts = 0;
+  do {
+    const number = Math.floor(Math.random() * 900) + 100;
+    ticket = `A-${number}`;
+    attempts += 1;
+  } while (used.has(ticket) && attempts < 20);
 
-  const index = Math.floor(
-    Math.log(bytes) / Math.log(1024)
-  );
+  saveSessionTicket(ticket);
+  return ticket;
+};
 
-  return `${(
-    bytes / Math.pow(1024, index)
-  ).toFixed(2)} ${units[index]}`;
-}
+const initRegistrationPage = (): void => {
+  const form = document.getElementById('registrationForm') as HTMLFormElement | null;
+  if (!form) return;
 
+  const hospitalName = resolveHospitalFromUrl();
+  const hospitalDisplay = document.getElementById('hospitalNameDisplay');
+  const hospitalInput = document.getElementById('hospitalName') as HTMLInputElement | null;
+  if (hospitalDisplay) hospitalDisplay.textContent = hospitalName;
+  if (hospitalInput) hospitalInput.value = hospitalName;
 
-function fileToMetadata(
-  file: File | null
-): FileMetadata | null {
+  const supabaseClient = getSupabaseClient();
+  const formErrorId = 'formError';
 
-  if (!file) {
-    return null;
-  }
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    setAlert(formErrorId, '', false);
 
-  return {
-    name: file.name,
-    size: file.size,
-    type: file.type,
-    lastModified: file.lastModified
-  };
-}
+    const patientNameInput = document.getElementById('patientName') as HTMLInputElement | null;
+    const emailInput = document.getElementById('email') as HTMLInputElement | null;
+    const phoneInput = document.getElementById('phone') as HTMLInputElement | null;
+    const reasonInput = document.getElementById('reason') as HTMLTextAreaElement | null;
+    const submitButton = document.getElementById('submitButton') as HTMLButtonElement | null;
+    const submitLabel = document.getElementById('submitLabel');
+    const submitSpinner = document.getElementById('submitSpinner');
 
+    const patientName = patientNameInput?.value.trim() ?? '';
+    const email = emailInput?.value.trim() ?? '';
+    const phone = phoneInput?.value.trim() ?? '';
+    const reason = reasonInput?.value.trim() ?? '';
 
-// ============================================================
-// URL / HOSPITAL SELECTION
-// ============================================================
-
-function getHospitalFromQuery(): Hospital | null {
-
-  const params = new URLSearchParams(
-    window.location.search
-  );
-
-  const hospitalId = params.get("hospital");
-
-  if (!hospitalId) {
-    return null;
-  }
-
-  return (
-    hospitals.find(
-      hospital => hospital.id === hospitalId
-    ) ?? null
-  );
-}
-
-
-// ============================================================
-// HOSPITAL PAGE
-// ============================================================
-
-function initializeHospitalPage(): void {
-
-  const hospitalGrid =
-    getElement<HTMLDivElement>("#hospitalGrid");
-
-  if (!hospitalGrid) {
-    return;
-  }
-
-
-  const searchInput =
-    getElement<HTMLInputElement>("#hospitalSearch");
-
-  const districtFilter =
-    getElement<HTMLSelectElement>("#districtFilter");
-
-  const noHospitals =
-    getElement<HTMLDivElement>("#noHospitals");
-
-
-  function renderHospitals(): void {
-
-    const searchTerm =
-      searchInput?.value
-        .trim()
-        .toLowerCase() ?? "";
-
-    const district =
-      districtFilter?.value ?? "all";
-
-
-    const filtered =
-      hospitals.filter(hospital => {
-
-        const matchesSearch =
-          hospital.name
-            .toLowerCase()
-            .includes(searchTerm) ||
-
-          hospital.location
-            .toLowerCase()
-            .includes(searchTerm) ||
-
-          hospital.specialties.some(
-            specialty =>
-              specialty
-                .toLowerCase()
-                .includes(searchTerm)
-          );
-
-
-        const matchesDistrict =
-          district === "all" ||
-          hospital.district === district;
-
-
-        return (
-          matchesSearch &&
-          matchesDistrict
-        );
-
-      });
-
-
-    hospitalGrid.innerHTML = "";
-
-
-    if (filtered.length === 0) {
-
-      noHospitals?.classList.remove("hidden");
-
+    if (!patientName || !email) {
+      setAlert(formErrorId, 'Please enter the patient name and a valid email address.');
       return;
     }
 
-
-    noHospitals?.classList.add("hidden");
-
-
-    filtered.forEach(
-      hospital => {
-
-        const card =
-          document.createElement("article");
-
-        card.className =
-          "bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden hover:shadow-lg transition";
-
-
-        const specialtyHtml =
-          hospital.specialties
-            .map(
-              specialty => `
-                <span class="inline-flex px-3 py-1 rounded-full bg-sky-50 text-medical text-xs font-semibold">
-                  ${escapeHtml(specialty)}
-                </span>
-              `
-            )
-            .join("");
-
-
-        const insuranceHtml =
-          hospital.insurance
-            .map(
-              provider => `
-                <span class="text-xs text-slate-600">
-                  ${escapeHtml(provider)}
-                </span>
-              `
-            )
-            .join(" · ");
-
-
-        card.innerHTML = `
-
-          <div class="h-40 bg-gradient-to-br from-navy to-medical flex items-center justify-center">
-
-            <div class="h-20 w-20 rounded-2xl bg-white/10 border border-white/20 flex items-center justify-center text-4xl">
-              🏥
-            </div>
-
-          </div>
-
-
-          <div class="p-6">
-
-            <div class="flex items-start justify-between gap-3">
-
-              <div>
-
-                <h2 class="text-xl font-bold text-navy">
-                  ${escapeHtml(hospital.name)}
-                </h2>
-
-                <p class="mt-1 text-sm text-slate-500">
-                  📍 ${escapeHtml(hospital.location)}
-                </p>
-
-              </div>
-
-              <span class="shrink-0 text-xs font-bold bg-green-50 text-green-700 px-2 py-1 rounded-full">
-                Partner
-              </span>
-
-            </div>
-
-
-            <p class="mt-4 text-sm text-slate-600 leading-relaxed">
-              ${escapeHtml(hospital.description)}
-            </p>
-
-
-            <h3 class="mt-5 text-sm font-bold text-navy">
-              Available Services
-            </h3>
-
-
-            <div class="flex flex-wrap gap-2 mt-3">
-              ${specialtyHtml}
-            </div>
-
-
-            <h3 class="mt-5 text-sm font-bold text-navy">
-              Insurance / Payment
-            </h3>
-
-
-            <p class="mt-2 text-xs leading-5">
-              ${insuranceHtml}
-            </p>
-
-
-            <a
-              href="${hospital.registrationUrl}"
-              class="mt-6 block text-center bg-medical hover:bg-sky-700 text-white py-3.5 rounded-xl font-bold transition"
-            >
-              Select & Register at This Hospital
-            </a>
-
-          </div>
-        `;
-
-
-        hospitalGrid.appendChild(card);
-
-      }
-    );
-
-  }
-
-
-  searchInput?.addEventListener(
-    "input",
-    renderHospitals
-  );
-
-  districtFilter?.addEventListener(
-    "change",
-    renderHospitals
-  );
-
-
-  renderHospitals();
-}
-
-
-// ============================================================
-// REGISTRATION PAGE
-// ============================================================
-
-function initializeRegistrationPage(): void {
-
-  const form =
-    getElement<HTMLFormElement>(
-      "#registrationForm"
-    );
-
-  if (!form) {
-    return;
-  }
-
-
-  const hospital =
-    getHospitalFromQuery();
-
-
-  const hospitalName =
-    getElement<HTMLElement>(
-      "#selectedHospitalName"
-    );
-
-  const hospitalLocation =
-    getElement<HTMLElement>(
-      "#selectedHospitalLocation"
-    );
-
-
-  // ----------------------------------------------------------
-  // No hospital selected
-  // ----------------------------------------------------------
-
-  if (!hospital) {
-
-    if (hospitalName) {
-      hospitalName.textContent =
-        "No hospital selected";
+    if (!emailInput?.checkValidity()) {
+      setAlert(formErrorId, 'Please enter a valid email address.');
+      return;
     }
 
-    if (hospitalLocation) {
-      hospitalLocation.textContent =
-        "Please return to the hospital directory.";
+    if (!supabaseClient) {
+      setAlert(formErrorId, 'Supabase is not configured yet. Replace the Supabase placeholders in src/app.ts and compile again.');
+      return;
     }
 
-    form.querySelectorAll(
-      "input, select, button"
-    ).forEach(
-      element => {
-        (element as HTMLInputElement |
-          HTMLSelectElement |
-          HTMLButtonElement).disabled = true;
-      }
-    );
+    if (submitButton) submitButton.disabled = true;
+    if (submitLabel) submitLabel.textContent = 'Registering…';
+    showElement('submitSpinner', true);
 
-    return;
-  }
+    const ticketNumber = generateTicket();
 
+    const { data, error } = await supabaseClient.from<QueuePatient>('queue').insert({
+      patient_name: patientName,
+      email,
+      hospital_name: hospitalName,
+      ticket_number: ticketNumber,
+      status: 'waiting',
+    });
 
-  // ----------------------------------------------------------
-  // Display selected hospital
-  // ----------------------------------------------------------
-
-  if (hospitalName) {
-    hospitalName.textContent =
-      hospital.name;
-  }
-
-  if (hospitalLocation) {
-    hospitalLocation.textContent =
-      hospital.location;
-  }
-
-
-  // ----------------------------------------------------------
-  // Date validation
-  // ----------------------------------------------------------
-
-  const visitDate =
-    getElement<HTMLInputElement>(
-      "#visitDate"
-    );
-
-
-  if (visitDate) {
-
-    const today =
-      new Date()
-        .toISOString()
-        .split("T")[0];
-
-    visitDate.min = today;
-
-  }
-
-
-  // ----------------------------------------------------------
-  // Form submission
-  // ----------------------------------------------------------
-
-  form.addEventListener(
-    "submit",
-    event => {
-
-      event.preventDefault();
-
-
-      if (!form.checkValidity()) {
-
-        form.reportValidity();
-
-        showFormMessage(
-          "Please complete all required fields before submitting.",
-          "error"
-        );
-
-        return;
-      }
-
-
-      const registration =
-        collectRegistrationData(hospital);
-
-
-      console.log(
-        "SmartCare registration prototype:",
-        registration
-      );
-
-
-      // Prototype persistence
-      localStorage.setItem(
-        "smartcare:lastRegistration",
-        JSON.stringify(registration)
-      );
-
-
-      showFormMessage(
-        `
-          Registration captured successfully for
-          <strong>${escapeHtml(hospital.name)}</strong>.
-          In a production implementation, this information would
-          now be securely transmitted to the SmartCare backend.
-        `,
-        "success"
-      );
-
-
-      form.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
+    if (error || !data) {
+      setAlert(formErrorId, `Registration failed: ${error?.message ?? 'No database response received.'}`);
+      if (submitButton) submitButton.disabled = false;
+      if (submitLabel) submitLabel.textContent = 'Get My Queue Ticket';
+      showElement('submitSpinner', false);
+      return;
     }
-  );
 
-
-  // ----------------------------------------------------------
-  // NIN input protection
-  // ----------------------------------------------------------
-
-  const nin =
-    getElement<HTMLInputElement>(
-      "#nin"
-    );
-
-
-  nin?.addEventListener(
-    "input",
-    () => {
-
-      nin.value =
-        nin.value
-          .replace(/\D/g, "")
-          .slice(0, 16);
-
-    }
-  );
-
-}
-
-
-// ============================================================
-// COLLECT FORM DATA
-// ============================================================
-
-function collectRegistrationData(
-  hospital: Hospital
-): PatientRegistration {
-
-
-  const getValue = (
-    id: string
-  ): string => {
-
-    const element =
-      document.getElementById(
-        id
-      ) as HTMLInputElement |
-        HTMLSelectElement |
-        null;
-
-    return element?.value.trim() ?? "";
-
-  };
-
-
-  const identificationInput =
-    getElement<HTMLInputElement>(
-      "#idDocument"
-    );
-
-
-  const insuranceInput =
-    getElement<HTMLInputElement>(
-      "#insuranceDocument"
-    );
-
-
-  const dependentName =
-    getValue(
-      "dependentName"
-    );
-
-
-  const dependentRelationship =
-    getValue(
-      "relationship"
-    );
-
-
-  const registration: PatientRegistration = {
-
-    hospitalId:
-      hospital.id,
-
-
-    primarySponsor: {
-
-      fullName:
-        getValue("fullName"),
-
-      nin:
-        getValue("nin"),
-
-      dateOfBirth:
-        getValue("dob"),
-
-      occupation:
-        getValue("occupation"),
-
-      phone:
-        getValue("phone"),
-
-      email:
-        getValue("email")
-
-    },
-
-
-    address: {
-
-      province:
-        getValue("province"),
-
-      district:
-        getValue("district"),
-
-      sector:
-        getValue("sector"),
-
-      cell:
-        getValue("cell"),
-
-      village:
-        getValue("village")
-
-    },
-
-
-    dependent:
-      dependentName
-        ? {
-            fullName:
-              dependentName,
-
-            relationship:
-              dependentRelationship
-          }
-        : null,
-
-
-    insurance: {
-
-      provider:
-        getValue(
-          "insuranceProvider"
-        ),
-
-      policyId:
-        getValue(
-          "policyId"
-        )
-
-    },
-
-
-    documents: {
-
-      identificationDocument:
-        fileToMetadata(
-          identificationInput?.files?.[0] ?? null
-        ),
-
-      insuranceDocument:
-        fileToMetadata(
-          insuranceInput?.files?.[0] ?? null
-        )
-
-    },
-
-
-    visit: {
-
-      date:
-        getValue(
-          "visitDate"
-        ),
-
-      department:
-        getValue(
-          "department"
-        )
-
-    },
-
-
-    submittedAt:
-      new Date().toISOString()
-
-  };
-
-
-  return registration;
-}
-
-
-// ============================================================
-// FILE UPLOAD PREVIEW / METADATA
-// ============================================================
-
-function initializeFileInputs(): void {
-
-  const fileInputs =
-    document.querySelectorAll<HTMLInputElement>(
-      'input[type="file"]'
-    );
-
-
-  fileInputs.forEach(
-    input => {
-
-      input.addEventListener(
-        "change",
-        () => {
-
-          const file =
-            input.files?.[0];
-
-
-          if (!file) {
-            return;
-          }
-
-
-          const maxSize =
-            5 * 1024 * 1024;
-
-
-          if (file.size > maxSize) {
-
-            showFormMessage(
-              `${file.name} is larger than the 5 MB prototype limit.`,
-              "error"
-            );
-
-            input.value = "";
-
-            return;
-          }
-
-
-          console.log(
-            "Selected file:",
-            {
-              name: file.name,
-              type: file.type,
-              size: formatFileSize(file.size),
-              lastModified:
-                new Date(
-                  file.lastModified
-                ).toISOString()
-            }
-          );
-
+    form.reset();
+    if (hospitalInput) hospitalInput.value = hospitalName;
+    setText('ticketNumber', ticketNumber);
+    setText('successHospital', hospitalName);
+    showElement('formView', false);
+    showElement('successView', true);
+
+    const emailStatus = document.getElementById('emailStatus');
+
+    if (hasEmailJsConfig()) {
+      try {
+        emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+          to_email: email,
+          patient_name: patientName,
+          hospital_name: hospitalName,
+          ticket_number: ticketNumber,
+          status: 'Waiting',
+          phone,
+          reason,
+        });
+        if (emailStatus) {
+          emailStatus.textContent = `A confirmation email was sent to ${email}.`;
+          emailStatus.className = 'mx-auto mt-5 max-w-sm rounded-2xl bg-emerald-50 p-4 text-left text-xs font-semibold leading-5 text-emerald-800';
         }
-      );
-
+      } catch (emailError) {
+        console.error('EmailJS failed after successful registration:', emailError);
+        if (emailStatus) {
+          emailStatus.textContent = 'Registration is confirmed. The email service could not send a message in this demo, but your queue ticket remains valid.';
+          emailStatus.className = 'mx-auto mt-5 max-w-sm rounded-2xl bg-amber-50 p-4 text-left text-xs font-semibold leading-5 text-amber-800';
+        }
+      }
+    } else if (emailStatus) {
+      emailStatus.textContent = 'Registration is confirmed. Add your EmailJS credentials in src/app.ts to enable confirmation emails.';
+      emailStatus.className = 'mx-auto mt-5 max-w-sm rounded-2xl bg-slate-50 p-4 text-left text-xs font-semibold leading-5 text-slate-600';
     }
-  );
+  });
 
-}
+  const newRegistrationButton = document.getElementById('newRegistrationButton');
+  newRegistrationButton?.addEventListener('click', () => {
+    showElement('successView', false);
+    showElement('formView', true);
+    setText('emailStatus', 'A confirmation email is being prepared.');
+    const status = document.getElementById('emailStatus');
+    if (status) status.className = 'mx-auto mt-5 max-w-sm rounded-2xl bg-sky-50 p-4 text-left text-xs font-semibold leading-5 text-sky-800';
+    const submitButton = document.getElementById('submitButton') as HTMLButtonElement | null;
+    const submitLabel = document.getElementById('submitLabel');
+    if (submitButton) submitButton.disabled = false;
+    if (submitLabel) submitLabel.textContent = 'Get My Queue Ticket';
+    showElement('submitSpinner', false);
+    const firstInput = document.getElementById('patientName') as HTMLInputElement | null;
+    firstInput?.focus();
+  });
+};
 
+const adminState: { patients: QueuePatient[]; realtimeStarted: boolean } = {
+  patients: [],
+  realtimeStarted: false,
+};
 
-// ============================================================
-// FORM NOTIFICATIONS
-// ============================================================
+const sortNewestFirst = (): void => {
+  adminState.patients.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+};
 
-function showFormMessage(
-  message: string,
-  type: "success" | "error"
-): void {
-
-  const messageBox =
-    getElement<HTMLDivElement>(
-      "#formMessage"
-    );
-
-
-  if (!messageBox) {
-    return;
-  }
-
-
-  messageBox.classList.remove(
-    "hidden"
-  );
-
-
-  if (type === "success") {
-
-    messageBox.className =
-      "rounded-xl p-4 text-sm bg-green-50 border border-green-200 text-green-800";
-
+const upsertPatient = (patient: QueuePatient): void => {
+  const existingIndex = adminState.patients.findIndex((item) => item.id === patient.id);
+  if (existingIndex >= 0) {
+    adminState.patients[existingIndex] = { ...adminState.patients[existingIndex], ...patient };
   } else {
-
-    messageBox.className =
-      "rounded-xl p-4 text-sm bg-red-50 border border-red-200 text-red-800";
-
+    adminState.patients.unshift(patient);
   }
+  sortNewestFirst();
+};
 
+const renderAdmin = (): void => {
+  const waiting = adminState.patients.filter((patient) => patient.status === 'waiting').length;
+  const serving = adminState.patients.filter((patient) => patient.status === 'serving').length;
+  const completed = adminState.patients.filter((patient) => patient.status === 'completed').length;
 
-  messageBox.innerHTML =
-    message;
+  setText('waitingCount', String(waiting));
+  setText('servingCount', String(serving));
+  setText('completedCount', String(completed));
+  setText('totalCount', String(adminState.patients.length));
+  setText('lastUpdated', new Date().toLocaleTimeString());
 
-}
+  const tableBody = document.getElementById('queueTableBody');
+  const loading = document.getElementById('queueLoading');
+  const empty = document.getElementById('queueEmpty');
+  const tableWrap = document.getElementById('queueTableWrap');
+  if (!tableBody || !loading || !empty || !tableWrap) return;
 
+  loading.classList.add('hidden');
 
-// ============================================================
-// MOBILE NAVIGATION
-// ============================================================
-
-function initializeMobileNavigation(): void {
-
-  const button =
-    getElement<HTMLButtonElement>(
-      "#mobileMenuButton"
-    );
-
-  const menu =
-    getElement<HTMLDivElement>(
-      "#mobileMenu"
-    );
-
-
-  if (!button || !menu) {
+  if (adminState.patients.length === 0) {
+    empty.classList.remove('hidden');
+    tableWrap.classList.add('hidden');
+    tableBody.innerHTML = '';
     return;
   }
 
+  empty.classList.add('hidden');
+  tableWrap.classList.remove('hidden');
 
-  button.addEventListener(
-    "click",
-    () => {
+  tableBody.innerHTML = adminState.patients.map((patient) => {
+    const statusClass = patient.status === 'waiting'
+      ? 'bg-amber-50 text-amber-700'
+      : patient.status === 'serving'
+        ? 'bg-sky-50 text-sky-700'
+        : 'bg-emerald-50 text-emerald-700';
 
-      menu.classList.toggle(
-        "hidden"
-      );
+    const actionButton = patient.status === 'waiting'
+      ? `<button data-action="serve" data-id="${escapeHtml(patient.id ?? '')}" class="rounded-xl bg-sky-700 px-3 py-2 text-xs font-black text-white hover:bg-sky-800">Call next</button>`
+      : patient.status === 'serving'
+        ? `<button data-action="complete" data-id="${escapeHtml(patient.id ?? '')}" class="rounded-xl bg-emerald-600 px-3 py-2 text-xs font-black text-white hover:bg-emerald-700">Complete</button>`
+        : `<span class="text-xs font-bold text-slate-400">Done</span>`;
 
-    }
-  );
+    return `
+      <tr data-row-id="${escapeHtml(patient.id ?? '')}" class="group transition hover:bg-slate-50">
+        <td class="whitespace-nowrap px-5 py-4 sm:px-6"><div class="text-base font-black text-slate-950">${escapeHtml(patient.ticket_number)}</div></td>
+        <td class="px-5 py-4 sm:px-6"><div class="font-extrabold text-slate-800">${escapeHtml(patient.patient_name)}</div><div class="mt-1 text-xs text-slate-400">${escapeHtml(patient.email)}</div></td>
+        <td class="px-5 py-4 text-sm font-semibold text-slate-600 sm:px-6">${escapeHtml(patient.hospital_name)}</td>
+        <td class="px-5 py-4 sm:px-6"><span class="rounded-full px-3 py-1.5 text-xs font-black ${statusClass}">${escapeHtml(patient.status)}</span></td>
+        <td class="whitespace-nowrap px-5 py-4 text-sm font-semibold text-slate-500 sm:px-6">${escapeHtml(formatDateTime(patient.created_at))}</td>
+        <td class="whitespace-nowrap px-5 py-4 sm:px-6">${actionButton}</td>
+      </tr>`;
+  }).join('');
+};
 
-}
+const showNewPatientNotice = (patient: QueuePatient): void => {
+  const notice = document.getElementById('adminNotice');
+  if (!notice) return;
+  notice.textContent = `New patient: ${patient.ticket_number} · ${patient.patient_name} just joined the queue.`;
+  notice.classList.remove('hidden');
+  window.setTimeout(() => notice.classList.add('hidden'), 5000);
+};
 
-
-// ============================================================
-// APPLICATION BOOTSTRAP
-// ============================================================
-
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    initializeMobileNavigation();
-
-    initializeHospitalPage();
-
-    initializeRegistrationPage();
-
-    initializeFileInputs();
-
+const initAdminDashboard = async (): Promise<void> => {
+  const supabaseClient = getSupabaseClient();
+  if (!supabaseClient) {
+    setAlert('adminError', 'Supabase is not configured yet. Replace the Supabase placeholders in src/app.ts and compile again.');
+    setText('connectionBadge', '● Not configured');
+    setText('queueLoading', 'Configuration required.');
+    return;
   }
-);
+
+  const loadResult = await supabaseClient.from<QueuePatient>('queue').select('*').order('created_at', { ascending: false });
+  if (loadResult.error) {
+    setAlert('adminError', `Unable to load queue: ${loadResult.error.message}`);
+  } else {
+    adminState.patients = loadResult.data ?? [];
+    sortNewestFirst();
+    renderAdmin();
+  }
+
+  const channel = supabaseClient
+    .channel('smartcare-queue-realtime')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'queue' }, (payload) => {
+      const patient = payload.new;
+      upsertPatient(patient);
+      renderAdmin();
+      showNewPatientNotice(patient);
+      const row = document.querySelector(`[data-row-id="${CSS.escape(patient.id ?? '')}"]`);
+      row?.classList.add('bg-emerald-50');
+      window.setTimeout(() => row?.classList.remove('bg-emerald-50'), 4500);
+    })
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'queue' }, (payload) => {
+      upsertPatient(payload.new);
+      renderAdmin();
+    })
+    .subscribe((status) => {
+      adminState.realtimeStarted = status === 'SUBSCRIBED';
+      const badge = document.getElementById('connectionBadge');
+      if (!badge) return;
+      if (status === 'SUBSCRIBED') {
+        badge.textContent = '● Live';
+        badge.className = 'rounded-2xl bg-emerald-50 px-4 py-2.5 text-xs font-black text-emerald-700';
+      } else if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+        badge.textContent = '● Realtime error';
+        badge.className = 'rounded-2xl bg-red-50 px-4 py-2.5 text-xs font-black text-red-700';
+      } else {
+        badge.textContent = `● ${status}`;
+        badge.className = 'rounded-2xl bg-amber-50 px-4 py-2.5 text-xs font-black text-amber-700';
+      }
+    });
+
+  document.addEventListener('click', async (event) => {
+    const target = event.target as HTMLElement | null;
+    const actionButton = target?.closest<HTMLButtonElement>('[data-action]');
+    if (!actionButton) return;
+
+    const id = actionButton.dataset.id;
+    const action = actionButton.dataset.action;
+    if (!id || !action) return;
+
+    const nextStatus: QueuePatient['status'] = action === 'serve' ? 'serving' : 'completed';
+    actionButton.disabled = true;
+    actionButton.classList.add('opacity-50');
+
+    const { error } = await supabaseClient
+      .from<QueuePatient>('queue')
+      .update({ status: nextStatus })
+      .eq('id', id);
+
+    if (error) {
+      setAlert('adminError', `Could not update queue status: ${error.message}`);
+      actionButton.disabled = false;
+      actionButton.classList.remove('opacity-50');
+    }
+  });
+};
+
+const initClock = (): void => {
+  const update = (): void => {
+    setText('currentClock', new Intl.DateTimeFormat(undefined, {
+      dateStyle: 'medium',
+      timeStyle: 'medium',
+    }).format(new Date()));
+  };
+  update();
+  window.setInterval(update, 1000);
+};
+
+const initApp = (): void => {
+  const page = document.body.dataset.page;
+  if (page === 'register') initRegistrationPage();
+  if (page === 'admin') {
+    void initAdminDashboard();
+    initClock();
+  }
+};
+
+document.addEventListener('DOMContentLoaded', initApp);
